@@ -1,0 +1,70 @@
+<div class="faq-section">
+  {{ .Inner | markdownify }}
+</div>
+
+<style>
+.faq-section {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.faq-item {
+  border-bottom: 1px solid #eee;
+}
+
+.faq-question {
+  width: 100%;
+  text-align: left;
+  padding: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  color: #333;
+}
+
+.faq-question:hover {
+  background: #f5f5f5;
+}
+
+.faq-question::after {
+  content: '▼';
+  font-size: 0.8em;
+  margin-left: 1rem;
+}
+
+.faq-question.active::after {
+  content: '▲';
+}
+
+.faq-answer {
+  display: none;
+  padding: 0 1rem 1rem 1rem;
+  color: #666;
+}
+
+.faq-answer.show {
+  display: block;
+}
+</style>
+
+<script>
+document.querySelectorAll('.faq-question').forEach(question => {
+  question.addEventListener('click', () => {
+    const answer = question.nextElementSibling;
+    const isActive = question.classList.contains('active');
+
+    // Close other answers
+    document.querySelectorAll('.faq-answer').forEach(a => a.classList.remove('show'));
+    document.querySelectorAll('.faq-question').forEach(q => q.classList.remove('active'));
+
+    // Toggle current answer
+    if (!isActive) {
+      answer.classList.add('show');
+      question.classList.add('active');
+    }
+  });
+});
+</script>
