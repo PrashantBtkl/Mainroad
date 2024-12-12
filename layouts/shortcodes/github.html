@@ -1,0 +1,56 @@
+<a href="https://github.com/{{ .Get "user" }}/{{ .Get "repo" }}" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit;">
+  <div class="github-repo-preview" id="github-repo-{{ .Get "user" }}-{{ .Get "repo" }}">
+    <div style="display: flex; align-items: center;">
+      <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub Logo" style="width: 32px; height: 32px; margin-right: 10px;">
+      <strong>{{ .Get "repo" }}</strong>
+    </div>
+    <p id="description-{{ .Get "user" }}-{{ .Get "repo" }}">Loading description...</p>
+    <p>
+      🌟 <strong id="stars-{{ .Get "user" }}-{{ .Get "repo" }}">Loading...</strong> stars | 🍴
+      <strong id="forks-{{ .Get "user" }}-{{ .Get "repo" }}">Loading...</strong> forks
+    </p>
+  </div>
+</a>
+
+<script>
+  async function fetchGitHubRepoData(user, repo) {
+    const starsElem = document.getElementById(`stars-${user}-${repo}`);
+    const forksElem = document.getElementById(`forks-${user}-${repo}`);
+    const descriptionElem = document.getElementById(`description-${user}-${repo}`);
+    try {
+      const response = await fetch(`https://api.github.com/repos/${user}/${repo}`);
+      if (!response.ok) throw new Error('Failed to fetch');
+      const data = await response.json();
+      starsElem.textContent = data.stargazers_count || 0;
+      forksElem.textContent = data.forks_count || 0;
+      descriptionElem.textContent = data.description || 'No description available.';
+    } catch (error) {
+      starsElem.textContent = 'Error';
+      forksElem.textContent = 'Error';
+      descriptionElem.textContent = 'Error fetching description.';
+      console.error('Error fetching GitHub repo data:', error);
+    }
+  }
+
+  fetchGitHubRepoData('{{ .Get "user" }}', '{{ .Get "repo" }}');
+</script>
+
+<style>
+  .github-repo-preview {
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    padding: 10px;
+    margin: 10px 0;
+    font-family: Arial, sans-serif;
+  }
+  .github-repo-preview a {
+    text-decoration: none;
+    color: #0366d6;
+  }
+  .github-repo-preview a:hover {
+    text-decoration: underline;
+  }
+  .github-repo-preview img {
+    vertical-align: middle;
+  }
+</style>
